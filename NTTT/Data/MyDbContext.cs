@@ -12,6 +12,7 @@ namespace NTTT.Controllers.Data
         public MyDbContext(DbContextOptions options) : base(options) { }
 
         #region Dbset
+        public DbSet<NguoiDung> NguoiDungs { get; set; }
         public DbSet<HangHoa> HangHoas { get; set; }
         public DbSet<Loai> Loais { get; set; }
         public DbSet<DonHang> DonHangs { get; set; }
@@ -45,6 +46,12 @@ namespace NTTT.Controllers.Data
                    .HasConstraintName("FK_DonHangCT_HangHoa");
             });
 
+            modelBuilder.Entity<NguoiDung>(entity =>
+            {
+                entity.HasIndex(e => e.UserName).IsUnique();
+                entity.Property(e => e.HoTen).IsRequired().HasMaxLength(150);
+                entity.Property(e => e.Email).IsRequired().HasMaxLength(150);
+            });
         }
     }
 }

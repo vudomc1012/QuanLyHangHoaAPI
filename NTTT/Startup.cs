@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NTTT.Controllers.Data;
+using NTTT.Models;
 using NTTT.Services;
 using System;
 using System.Collections.Generic;
@@ -42,9 +43,10 @@ namespace NTTT
 
             //services.AddScoped<ILoaiRepository, LoaiRepository>();
             services.AddScoped<ILoaiRepository, LoaiRepositoryInMemory>();
-            services.AddScoped<IHangHoaRespository, HangHoaRespository>();
+            services.AddScoped<IHangHoaRepository, HangHoaRepository>();
+            services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
 
-            var secretKey = Configuration["AppSetting:SecretKey"];
+            var secretKey = Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
             {
@@ -83,6 +85,7 @@ namespace NTTT
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
