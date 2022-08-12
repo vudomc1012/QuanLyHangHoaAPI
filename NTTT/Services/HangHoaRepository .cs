@@ -11,6 +11,7 @@ namespace NTTT.Services
     public class HangHoaRepository : IHangHoaRepository
     {
         private readonly MyDbContext _context;
+
         public static int PAGE_SIZE { get; set; } = 5;
 
         public HangHoaRepository(MyDbContext context)
