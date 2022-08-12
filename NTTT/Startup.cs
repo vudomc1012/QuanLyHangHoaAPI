@@ -98,6 +98,7 @@ namespace NTTT
 
             app.UseEndpoints(endpoints =>
             {
+                //d
                 endpoints.MapControllers();
             });
         }
