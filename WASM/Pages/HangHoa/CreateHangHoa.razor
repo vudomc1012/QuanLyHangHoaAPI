@@ -1,0 +1,34 @@
+﻿@page "/createhanghoa"
+
+<h3>Thêm mới hàng hóa</h3>
+
+<EditForm Model="sv" OnValidSubmit="SubmitSinhVien">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="TenSinhVien">Tên hàng hóa</label>
+        <input class="form-control" @bind-value="sv.TenHH" />
+        <ValidationMessage For="()=>sv.TenHH"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="TenSinhVien">Mô tả</label>
+        <input  class="form-control" @bind-value="sv.MoTa" />
+        <ValidationMessage For="()=>sv.MoTa"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="TenSinhVien">Đơn giá</label>
+        <input class="form-control" @bind-value="sv.DonGia" />
+        <ValidationMessage For="()=>sv.DonGia"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="TenSinhVien">Giảm giá</label>
+        <input class="form-control"  @bind-value="sv.GiamGia" />
+        <ValidationMessage For="()=>sv.GiamGia"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label for="TenSinhVien">Loại</label>
+        <input class="form-control" type="password" @bind-value="sv.MaLoai" />
+        <ValidationMessage For="()=>sv.MaLoai"></ValidationMessage>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Thêm mới</button>
+</EditForm>

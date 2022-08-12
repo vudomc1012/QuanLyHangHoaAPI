@@ -19,19 +19,19 @@ namespace NTTT.Controllers
             _hangHoaRepository = hangHoaRepository;
         }
 
-        [HttpGet]
-        public IActionResult GetAllProducts(string search, double? from, double? to, string sortBy, int page = 1)
-        {
-            try
-            {
-                var result = _hangHoaRepository.GetAll(search, from, to, sortBy,page);
-                return Ok(result);
-            }
-            catch
-            {
+        //[HttpGet]
+        //public IActionResult GetAllProducts(string search, double? from, double? to, string sortBy, int page = 1)
+        //{
+        //    try
+        //    {
+        //        var result = _hangHoaRepository.GetAll(search, from, to, sortBy,page);
+        //        return Ok(result);
+        //    }
+        //    catch
+        //    {
 
-                return BadRequest("Không tìm thấy sản phẩm !");
-            }
-        }
+        //        return BadRequest("Không tìm thấy sản phẩm !");
+        //    }
+        //}
     }
 }
