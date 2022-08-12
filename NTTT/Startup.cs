@@ -42,8 +42,8 @@ namespace NTTT
             });
 
             //services.AddScoped<ILoaiRepository, LoaiRepository>();
-            services.AddScoped<ILoaiRepository, LoaiRepositoryInMemory>();
-            services.AddScoped<IHangHoaRepository, HangHoaRepository>();
+            services.AddTransient<ILoaiRepository, LoaiRepositoryInMemory>();
+            services.AddTransient<IHangHoaRepository, HangHoaRepository>();
             services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
 
             var secretKey = Configuration["AppSettings:SecretKey"];
@@ -68,6 +68,14 @@ namespace NTTT
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "NTTT", Version = "v1" });
             });
+            services.AddCors(c =>
+            {
+                c.AddPolicy("CorsPolicy", b => b
+                         .SetIsOriginAllowed((host) => true)
+                         .AllowAnyMethod()
+                         .AllowAnyHeader()
+                         .AllowCredentials());
+            });
         }
 
 
@@ -84,7 +92,7 @@ namespace NTTT
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
 
