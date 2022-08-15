@@ -1,8 +1,7 @@
-﻿using DTO;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NTTT.Controllers.Data;
-using NTTT.Services;
+using NTTT.API.Models;
+using DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,80 +13,95 @@ namespace NTTT.Controllers
     [ApiController]
     public class HangHoaController : ControllerBase
     {
-        public static List<HangHoa> hangHoas = new List<HangHoa>();
-        private IHangHoaRepository _hh;
-        public HangHoaController(IHangHoaRepository hangHoaRepository)
-        {
-            _hh = hangHoaRepository;
-        }
+        public static List<ViewHangHoa> hangHoas = new List<ViewHangHoa>();
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            List<HangHoa> lst = _hh.GetAll();
-            var alo = lst.Select(c=>new ViewHangHoa() {
-                MaHH=c.MaHH,
-                TenHH = c.TenHH,
-                MoTa = c.MoTa,
-                DonGia=c.DonGia,
-                GiamGia=c.GiamGia,
-                MaLoai=c.MaLoai
-            });
-            return Ok(alo);
+            return Ok(hangHoas);
         }
 
-        [HttpGet]
-        [Route("{ma}")]
-        public IActionResult GetById(Guid ma)
+        [HttpGet("{id}")]
+        public IActionResult GetById(string id)
         {
-            HangHoa sinhVien = _hh.Getid(ma);
-            if (sinhVien == null) return NotFound("Không tồn tại sinh viên này");
-            ViewHangHoa alo = new ViewHangHoa();
-            alo.MaHH = sinhVien.MaHH;
-            alo.TenHH = sinhVien.TenHH;
-            alo.MoTa = sinhVien.MoTa;
-            alo.DonGia = sinhVien.DonGia;
-            alo.GiamGia = sinhVien.GiamGia;
-            alo.MaLoai = sinhVien.MaLoai;      
-            return Ok(alo);
+            try
+            {
+                //LINQ[Object] Query
+                var hangHoa = hangHoas.SingleOrDefault(sv => sv.MaHH == Guid.Parse(id));
+                if (hangHoa == null)
+                {
+                    return NotFound();
+                }
+                return Ok(hangHoa);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
         public IActionResult Create(ViewHangHoa hangHoaVM)
-        {            
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var a = _hh.Create(new HangHoa() { 
-                MaHH=Guid.NewGuid(),
-                TenHH=hangHoaVM.TenHH,
-                MoTa=hangHoaVM.MoTa,
-                DonGia=hangHoaVM.DonGia,
-                GiamGia=hangHoaVM.GiamGia,
-                MaLoai=hangHoaVM.MaLoai
+        {
+            var hanghoa = new ViewHangHoa
+            {
+                MaHH = Guid.NewGuid(),
+                TenHH = hangHoaVM.TenHH,
+                DonGia = hangHoaVM.DonGia
+            };
+            hangHoas.Add(hanghoa);
+            return Ok(new
+            {
+                Success = true,
+                Data = hanghoa
             });
-            return CreatedAtAction(nameof(Create), a);
         }
 
-        [HttpPut]
-        public IActionResult Edit(ViewHangHoa viewHangHoa)
+        [HttpPut("{id}")]
+        public IActionResult Edit(string id, ViewHangHoa hangHoaEdit)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            _hh.Update(new HangHoa() {
-                MaHH=viewHangHoa.MaHH,
-                TenHH = viewHangHoa.TenHH,
-                MoTa = viewHangHoa.MoTa,
-                DonGia = viewHangHoa.DonGia,
-                GiamGia = viewHangHoa.GiamGia,
-                MaLoai = viewHangHoa.MaLoai
-            });
-            return Ok();
+            try
+            {
+                //LINQ[Object] Query
+                var hangHoa = hangHoas.SingleOrDefault(c => c.MaHH == Guid.Parse(id));
+                if (hangHoa == null)
+                {
+                    return NotFound("Không tìm thấy mã hàng hóa");
+                }
+                if (id != hangHoa.MaHH.ToString())
+                {
+                    return BadRequest();
+                }
+                //Update
+                hangHoa.TenHH = hangHoaEdit.TenHH;
+                hangHoa.DonGia = hangHoaEdit.DonGia;
+                return Ok("Bạn đã sửa thành cmn công");
+            }
+            catch
+            {
+                return BadRequest();
+            }        
         }
-        [HttpDelete]
-        [Route("{ma}")]
-        public IActionResult Delete(Guid ma)
+        [HttpDelete("{id}")]
+        public IActionResult Remove (string id)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            _hh.Delete(ma);
-            return Ok();
+            try
+            {
+                //LINQ[Object] Query
+                var hangHoa = hangHoas.SingleOrDefault(c => c.MaHH == Guid.Parse(id));
+                if (hangHoa == null)
+                {
+                    return NotFound();
+                }
+                //Delete
+                hangHoas.Remove(hangHoa);
+                return Ok(hangHoas);                   
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
         }
     }
 }

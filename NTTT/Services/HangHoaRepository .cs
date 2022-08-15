@@ -53,5 +53,10 @@ namespace NTTT.Services
         {
             return _context.HangHoas.FirstOrDefault(c => c.MaHH == ma);
         }
+
+        public List<API.Models.HangHoa> GetAll(string search, double? from, double? to, string sortBy, int page = 1)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using NTTT.Controllers.Data;
+﻿using NTTT.API.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,6 @@ namespace NTTT.Services
 {
     public interface IHangHoaRepository 
     { 
-        List<HangHoa> GetAll();
-        bool Create(HangHoa hangHoa);
-        bool Update(HangHoa hangHoa);
-        bool Delete(Guid ma);
-        HangHoa Getid(Guid ma);
+        List<HangHoa> GetAll(string search, double? from, double? to, string sortBy, int page = 1);
     }
 }
